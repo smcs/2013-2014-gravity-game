@@ -36,6 +36,7 @@ public class BackgroundController extends Core implements KeyListener {
 		w.setFocusTraversalKeysEnabled(false);
 		w.addKeyListener(this);
 
+		
 		bg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\bgplaceholder.jpg").getImage();
 		babeImg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\CharacterFiller.png").getImage();
 
@@ -86,15 +87,15 @@ public class BackgroundController extends Core implements KeyListener {
 	}
 	
 	public void whoismoving(){
-		System.out.println(bgDone);
+		
 		if(DirectionInt==1){
-			//System.out.println("bImg.x = " + bImg.x + "\ns.getWidth()/2 = "+ s.getWidth()/2 + "\nPlayerCentered = "+PlayerCentered);
 			if(bImg.x<s.getWidth()/2&&bgDone){
 				PlayerCentered=true;
 
 			}
 			if(PixelsTraveled<1){
 				PlayerCentered=false;
+				bgDone=false;
 			}
 		}
 		if(DirectionInt==2){
@@ -103,12 +104,13 @@ public class BackgroundController extends Core implements KeyListener {
 			}
 			if(PixelsTraveled>s.getWidth()){
 				bgDone=true;
+			}else{
+				bgDone=false;
 			}
 			if(bgDone){
 				PlayerCentered=false;
 			}
 		}
-		
 		
 	}
 	
@@ -123,9 +125,14 @@ public class BackgroundController extends Core implements KeyListener {
 		image.x %= width;
 		int ix = image.x;
 		int bx = bImg.x;
-		gelf.drawImage(bg,ix,0,null);
-		gelf.drawImage(bg,ix-width,0,null);
-		gelf.drawImage(babeImg, bx, height-50,null);
+		
+		if(PixelsTraveled<=0){
+			gelf.drawImage(bg, 0, 0, null);
+		}else{
+			gelf.drawImage(bg,ix,0,null);
+			gelf.drawImage(bg,ix-width,0,null);
+		}
+		gelf.drawImage(babeImg, bx, height-babeImg.getHeight(null),null);
 
 	}
 
