@@ -1,66 +1,50 @@
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+
+import javax.swing.ImageIcon;
 
 
 public class Babe {
-	private double xLoc,yLoc;
-	private int sWidth;
-	private boolean playerCentered=false;
+	private double xAcc=0,yAcc=-9.8;
+	private double xVel=0,yVel=0;
+	private double xPos,yPos;
+	private Image babeImg;
+	private Point babePt;
+	private int height,width;
 	
-	private Animation ani;
-	private float x;
-	private float y;
-	private float vX;
-	private float vY;
-	
-	
-	public void Babe(Animation a){
-		ani=a;
+	public Babe(double x,double y,int h, int w){
+		xPos=x;
+		yPos=y;
+		height=h;
+		width=w;
+		babePt=new Point();
+		babeImg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\CharacterFiller.png").getImage();
+
+		
 	}
-	
-	public boolean playerCentered(){
-		return playerCentered;
+	public void update(long timePassed){
+		
 	}
-	
-	public void updateLoc(long timePassed, int dX){
-		x+=dX;
-		ani.update(timePassed);
+	public void setXVelocity(double newV){
+		xVel=newV;
 	}
-	public float getX(){
-		return x;
-	}
-	public float getY(){
-		return y;
-	}
-	public void setX(float newX){
-		x=newX;
-	}
-	public void setY(float newY){
-		y=newY;
+	public void jump(double newyVel){
+		yVel=newyVel;
 	}
 	
-	public int getWidth(){
-		return ani.getImage().getWidth(null);
+	public void draw(Graphics2D gelf){
+		if(babePt.x<0){
+			babePt.x+=width;
+		}
+		
+		babePt.x %= width;
+		int ix = babePt.x;
+		
+		gelf.drawImage(babeImg, ix, height-babeImg.getHeight(null),null);
 	}
 	
-	public int getHeight(){
-		return ani.getImage().getHeight(null);
-	}
-	public float getVX(){
-		return vX;
-	}
-	public float getVY(){
-		return vY;
-	}
-	public void setVX(float velX){
-		vX=velX;
-	}
-	public void setVY(float velY){
-		vY=velY;
-	}
-	public Image getImage(){
-		return ani.getImage();
-	}
-	
+
 	
 }
 

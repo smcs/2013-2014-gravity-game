@@ -21,6 +21,7 @@ public class BackgroundController extends Core implements KeyListener {
 	private boolean bgDone = false;
 	private int DirectionInt=0;
 	private int PixelsTraveled=0;
+	private Babe babe;
 	
 	double dx=20;
 	double dy=5;
@@ -29,17 +30,12 @@ public class BackgroundController extends Core implements KeyListener {
 	public void init(){
 		super.init();
 		
-		image = new Point();
-		bImg = new Point();
-		
+		image = new Point();		
 		Window w = s.getFullScreenWindow();
 		w.setFocusTraversalKeysEnabled(false);
 		w.addKeyListener(this);
 
-		
-		bg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\bgplaceholder.jpg").getImage();
-		babeImg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\CharacterFiller.png").getImage();
-
+		babe = new Babe(20,w.getHeight()-100,s.getHeight(),s.getWidth());
 	}
 	
 	public void keyPressed(KeyEvent e) {
@@ -55,8 +51,7 @@ public class BackgroundController extends Core implements KeyListener {
 
 			}
 			DirectionInt=1;
-			whoismoving();
-			e.consume();
+                                                                                                                       			e.consume();
 			
 		}else if(keyCode==KeyEvent.VK_RIGHT){
 			if(!PlayerCentered){
@@ -67,9 +62,16 @@ public class BackgroundController extends Core implements KeyListener {
 				image.x+=dx;
 			}
 			DirectionInt=2;
-			whoismoving();
 			e.consume();
+		}else if(keyCode==KeyEvent.VK_UP){
+			//TODO: Set Y velocity for jumping
+			babe.jump(5);
+			
+		}else if(keyCode==KeyEvent.VK_DOWN){
+			
+			
 		}else{
+		
 			e.consume();
 		}
 	}
@@ -86,53 +88,8 @@ public class BackgroundController extends Core implements KeyListener {
 		
 	}
 	
-	public void whoismoving(){
-		
-		if(DirectionInt==1){
-			if(bImg.x<s.getWidth()/2&&bgDone){
-				PlayerCentered=true;
-
-			}
-			if(PixelsTraveled<1){
-				PlayerCentered=false;
-				bgDone=false;
-			}
-		}
-		if(DirectionInt==2){
-			if(bImg.x>s.getWidth()/2&&!bgDone){
-				PlayerCentered=true;
-			}
-			if(PixelsTraveled>s.getWidth()){
-				bgDone=true;
-			}else{
-				bgDone=false;
-			}
-			if(bgDone){
-				PlayerCentered=false;
-			}
-		}
-		
-	}
-	
 	public void draw(Graphics2D gelf) {
-		Window w = s.getFullScreenWindow();
-		int width = s.getWidth();
-		int height = s.getHeight();
-		if(image.x<0){
-			image.x+=width;
-		}
 		
-		image.x %= width;
-		int ix = image.x;
-		int bx = bImg.x;
-		
-		if(PixelsTraveled<=0){
-			gelf.drawImage(bg, 0, 0, null);
-		}else{
-			gelf.drawImage(bg,ix,0,null);
-			gelf.drawImage(bg,ix-width,0,null);
-		}
-		gelf.drawImage(babeImg, bx, height-babeImg.getHeight(null),null);
 
 	}
 
