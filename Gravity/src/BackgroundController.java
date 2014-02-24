@@ -43,24 +43,15 @@ public class BackgroundController extends Core implements KeyListener {
 		if(keyCode == KeyEvent.VK_ESCAPE){
 			stop();
 		}else if(keyCode==KeyEvent.VK_LEFT){
-			if(!PlayerCentered){
-				bImg.x-=dx;
-			}else{
-				image.x-=dx;
-				PixelsTraveled-=dx;
-
+			if (babe.getX()>0){
+				babe.setXVelocity(-20);
 			}
 			DirectionInt=1;
                                                                                                                        			e.consume();
 			
 		}else if(keyCode==KeyEvent.VK_RIGHT){
-			if(!PlayerCentered){
-				bImg.x+=dx;
-
-			}else{
-				PixelsTraveled+=dx;
-				image.x+=dx;
-			}
+			babe.setXVelocity(20);
+			
 			DirectionInt=2;
 			e.consume();
 		}else if(keyCode==KeyEvent.VK_UP){
@@ -77,6 +68,10 @@ public class BackgroundController extends Core implements KeyListener {
 	}
 
 	public void keyReleased(KeyEvent e) {
+		if(e.getKeyCode()==KeyEvent.VK_LEFT||e.getKeyCode()==KeyEvent.VK_RIGHT){
+			background.setXVelocity(0);
+			babe.setXVelocity(0);
+		}
 		e.consume();
 	}
 

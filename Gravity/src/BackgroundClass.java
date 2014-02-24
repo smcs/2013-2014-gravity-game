@@ -29,7 +29,9 @@ public class BackgroundClass {
 	public void setXVelocity(double newV){
 		xVel=newV;
 	}
-
+	public double getX(){
+		return xPos;
+	}
 	public void draw(Graphics2D gelf){
 		
 		if(bgPt.x<0){

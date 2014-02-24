@@ -54,7 +54,9 @@ public class Babe {
 		}
 		jumping=true;
 	}
-	
+	public double getX(){
+		return xPos;
+	}
 	public void draw(Graphics2D gelf){
 		if(babePt.x<0){
 			babePt.x+=width;
