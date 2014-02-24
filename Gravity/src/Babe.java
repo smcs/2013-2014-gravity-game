@@ -1,3 +1,5 @@
+package src;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -6,12 +8,13 @@ import javax.swing.ImageIcon;
 
 
 public class Babe {
-	private double xAcc=0,yAcc=-9.8;
+	private double xAcc=0,yAcc=-98;
 	private double xVel=0,yVel=0;
 	private double xPos,yPos;
 	private Image babeImg;
 	private Point babePt;
 	private int height,width;
+	private boolean jumping;
 	
 	public Babe(double x,double y,int h, int w){
 		xPos=x;
@@ -25,12 +28,31 @@ public class Babe {
 	}
 	public void update(long timePassed){
 		
+		xVel+=xAcc*timePassed/1000;		
+		xPos+=xVel*timePassed/1000;
+		if(jumping){
+			yVel+=yAcc*timePassed/1000;
+		}
+		if(height-yPos>=100&&jumping){
+			yPos-=yVel*timePassed/1000;
+		}else{
+			yPos=height-100;
+			yVel=0;
+			jumping=false;
+		}
+		System.out.println(yAcc+ " " + yVel + " " + (height-yPos));
+		babePt.x=(int) xPos;
+		babePt.y=(int) yPos;
 	}
 	public void setXVelocity(double newV){
 		xVel=newV;
 	}
+	
 	public void jump(double newyVel){
-		yVel=newyVel;
+		if(!jumping){
+			yVel=newyVel;
+		}
+		jumping=true;
 	}
 	
 	public void draw(Graphics2D gelf){
@@ -40,8 +62,8 @@ public class Babe {
 		
 		babePt.x %= width;
 		int ix = babePt.x;
-		
-		gelf.drawImage(babeImg, ix, height-babeImg.getHeight(null),null);
+		int iy = babePt.y;
+		gelf.drawImage(babeImg, ix, iy,null);
 	}
 	
 

@@ -1,11 +1,10 @@
+package src;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-import javax.swing.ImageIcon;
 
 
 public class BackgroundController extends Core implements KeyListener {
@@ -21,6 +20,7 @@ public class BackgroundController extends Core implements KeyListener {
 	private boolean bgDone = false;
 	private int DirectionInt=0;
 	private int PixelsTraveled=0;
+	private BackgroundClass background;
 	private Babe babe;
 	
 	double dx=20;
@@ -34,7 +34,7 @@ public class BackgroundController extends Core implements KeyListener {
 		Window w = s.getFullScreenWindow();
 		w.setFocusTraversalKeysEnabled(false);
 		w.addKeyListener(this);
-
+		background= new BackgroundClass(0,s.getWidth());
 		babe = new Babe(20,w.getHeight()-100,s.getHeight(),s.getWidth());
 	}
 	
@@ -65,11 +65,11 @@ public class BackgroundController extends Core implements KeyListener {
 			e.consume();
 		}else if(keyCode==KeyEvent.VK_UP){
 			//TODO: Set Y velocity for jumping
-			babe.jump(5);
-			
+			babe.jump(200);
+			e.consume();
 		}else if(keyCode==KeyEvent.VK_DOWN){
 			
-			
+			e.consume();
 		}else{
 		
 			e.consume();
@@ -85,10 +85,13 @@ public class BackgroundController extends Core implements KeyListener {
 	}
 
 	public void update(long timePassed){
-		
+		background.update(timePassed);
+		babe.update(timePassed);
 	}
 	
 	public void draw(Graphics2D gelf) {
+		background.draw(gelf);
+		babe.draw(gelf);
 		
 
 	}
