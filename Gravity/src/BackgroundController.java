@@ -1,4 +1,3 @@
-package src;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -22,6 +21,7 @@ public class BackgroundController extends Core implements KeyListener {
 	private int PixelsTraveled=0;
 	private BackgroundClass background;
 	private Babe babe;
+	private boolean isBabeMoving=true;
 	
 	double dx=20;
 	double dy=5;
@@ -42,28 +42,36 @@ public class BackgroundController extends Core implements KeyListener {
 		int keyCode = e.getKeyCode();
 		if(keyCode == KeyEvent.VK_ESCAPE){
 			stop();
-		}else if(keyCode==KeyEvent.VK_LEFT){
-			if (babe.getX()>0){
-				babe.setXVelocity(-20);
+		}
+		if(background.getX()>=0&&background.getX()<=background.getImage().getWidth(null)){
+			if(keyCode==KeyEvent.VK_LEFT){
+				if(isBabeMoving){
+					babe.setXVelocity(-20);
+				}else{
+					background.setXVelocity(-20);
+				}
+				DirectionInt=1;
+				e.consume();
+				
+			}else if(keyCode==KeyEvent.VK_RIGHT){
+				if(isBabeMoving){
+					babe.setXVelocity(20);
+				}else{
+					background.setXVelocity(20);
+				}
+				DirectionInt=2;
+				e.consume();
+			}else if(keyCode==KeyEvent.VK_UP){
+				//TODO: Set Y velocity for jumping
+				babe.jump(200);
+				e.consume();
+			}else if(keyCode==KeyEvent.VK_DOWN){
+				
+				e.consume();
+			}else{
+				
+				e.consume();
 			}
-			DirectionInt=1;
-                                                                                                                       			e.consume();
-			
-		}else if(keyCode==KeyEvent.VK_RIGHT){
-			babe.setXVelocity(20);
-			
-			DirectionInt=2;
-			e.consume();
-		}else if(keyCode==KeyEvent.VK_UP){
-			//TODO: Set Y velocity for jumping
-			babe.jump(200);
-			e.consume();
-		}else if(keyCode==KeyEvent.VK_DOWN){
-			
-			e.consume();
-		}else{
-		
-			e.consume();
 		}
 	}
 
@@ -89,6 +97,13 @@ public class BackgroundController extends Core implements KeyListener {
 		babe.draw(gelf);
 		
 
+	}
+	public void setbabeMoving(){
+		if(isBabeMoving){
+			isBabeMoving=false;
+		}else if(!isBabeMoving){
+			isBabeMoving=true;
+		}
 	}
 
 }

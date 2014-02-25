@@ -1,4 +1,3 @@
-package src;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -15,6 +14,7 @@ public class Babe {
 	private Point babePt;
 	private int height,width;
 	private boolean jumping;
+	private boolean PlayerCentered=false;
 	
 	public Babe(double x,double y,int h, int w){
 		xPos=x;
@@ -22,7 +22,7 @@ public class Babe {
 		height=h;
 		width=w;
 		babePt=new Point();
-		babeImg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\CharacterFiller.png").getImage();
+		babeImg= new ImageIcon("/Gravity/src/CharacterFiller.png").getImage();
 
 		
 	}
@@ -43,6 +43,11 @@ public class Babe {
 		System.out.println(yAcc+ " " + yVel + " " + (height-yPos));
 		babePt.x=(int) xPos;
 		babePt.y=(int) yPos;
+		
+		if(babePt.x==width/2-babeImg.getWidth(null)/2){
+			setPlayerCentered(true);
+		}
+	
 	}
 	public void setXVelocity(double newV){
 		xVel=newV;
@@ -56,6 +61,12 @@ public class Babe {
 	}
 	public double getX(){
 		return xPos;
+	}
+	public void setPlayerCentered(boolean asdf){
+		PlayerCentered=asdf;
+	}
+	public boolean getPlayerCentered(){
+		return PlayerCentered;
 	}
 	public void draw(Graphics2D gelf){
 		if(babePt.x<0){

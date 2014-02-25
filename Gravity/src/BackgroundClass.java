@@ -1,4 +1,3 @@
-package src;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -13,24 +12,34 @@ public class BackgroundClass {
 	private Image bgImg;
 	private Point bgPt;
 	private int ScreenWidth;
+	private boolean BgEnd=false;
 	
 	public BackgroundClass(double x, int sW){
 		xPos=x;
 		ScreenWidth=sW;
 		bgPt=new Point();
-		bgImg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\bgplaceholder.jpg").getImage();
+		bgImg= new ImageIcon("/Gravity/src/bgplaceholder.jpg").getImage();
 		
 	}
 	public void update(long timePassed){
 		xPos+=xVel*timePassed/1000;
 		bgPt.x=(int)xPos;
+		if(xPos==bgImg.getWidth(null)*2){
+			setBgEnd(true);
+		}
 		
+	}
+	private void setBgEnd(boolean asdf) {
+		BgEnd=asdf;
 	}
 	public void setXVelocity(double newV){
 		xVel=newV;
 	}
 	public double getX(){
 		return xPos;
+	}
+	public Image getImage(){
+		return bgImg;
 	}
 	public void draw(Graphics2D gelf){
 		
