@@ -11,6 +11,7 @@ public class BackgroundClass {
 	private double xPos;
 	private Image bgImg;
 	private Point bgPt;
+	private int DistanceTraveled=0;
 	private int ScreenWidth;
 	private boolean BgEnd=false;
 	
@@ -18,19 +19,25 @@ public class BackgroundClass {
 		xPos=x;
 		ScreenWidth=sW;
 		bgPt=new Point();
-		bgImg= new ImageIcon("/Gravity/src/bgplaceholder.jpg").getImage();
+		bgImg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\bgplaceholder.jpg").getImage();
 		
 	}
 	public void update(long timePassed){
+		int tempX=(int)xPos;
 		xPos+=xVel*timePassed/1000;
+		System.out.println(xPos + " " + bgPt.x + " " + DistanceTraveled);
 		bgPt.x=(int)xPos;
-		if(xPos==bgImg.getWidth(null)*2){
+		DistanceTraveled+=-1*(xPos-tempX);
+		if(DistanceTraveled==1920&&DistanceTraveled>0){
 			setBgEnd(true);
 		}
 		
 	}
 	private void setBgEnd(boolean asdf) {
 		BgEnd=asdf;
+	}
+	public boolean getBgEnd(){
+		return BgEnd;
 	}
 	public void setXVelocity(double newV){
 		xVel=newV;
@@ -41,6 +48,7 @@ public class BackgroundClass {
 	public Image getImage(){
 		return bgImg;
 	}
+	
 	public void draw(Graphics2D gelf){
 		
 		if(bgPt.x<0){

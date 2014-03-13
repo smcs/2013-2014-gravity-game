@@ -39,7 +39,7 @@ public abstract class Core {
 		
 		Window w=s.getFullScreenWindow();
 	//	w.setFont(new Font("Arial",Font.PLAIN,20));
-		w.setBackground(Color.green);
+		w.setBackground(Color.black);
 		w.setForeground(Color.white);
 		
 		running =true;

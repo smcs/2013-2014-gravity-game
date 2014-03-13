@@ -22,7 +22,7 @@ public class Babe {
 		height=h;
 		width=w;
 		babePt=new Point();
-		babeImg= new ImageIcon("/Gravity/src/CharacterFiller.png").getImage();
+		babeImg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\CharacterFiller.png").getImage();
 
 		
 	}
@@ -40,16 +40,18 @@ public class Babe {
 			yVel=0;
 			jumping=false;
 		}
-		System.out.println(yAcc+ " " + yVel + " " + (height-yPos));
 		babePt.x=(int) xPos;
 		babePt.y=(int) yPos;
 		
-		if(babePt.x==width/2-babeImg.getWidth(null)/2){
+		if(babePt.x>=width/2-babeImg.getWidth(null)/2-5&&babePt.x<=width/2-babeImg.getWidth(null)/2+5){
 			setPlayerCentered(true);
+		}else{
+			setPlayerCentered(false);
 		}
+		
 	
 	}
-	public void setXVelocity(double newV){
+	public void setXVelocity(double newV){  
 		xVel=newV;
 	}
 	
