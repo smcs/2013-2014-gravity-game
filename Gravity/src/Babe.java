@@ -15,18 +15,21 @@ public class Babe {
 	private int height,width;
 	private boolean jumping;
 	private boolean PlayerCentered=false;
+	private boolean HeadHitBottom,LandedOnPlatform,HitSideofPlatform;
 	
-	public Babe(double x,double y,int h, int w){
+	public Babe(double x,double y,int h, int w, String ImageLoc){
 		xPos=x;
 		yPos=y;
 		height=h;
 		width=w;
 		babePt=new Point();
-		babeImg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\CharacterFiller.png").getImage();
+		babeImg= new ImageIcon(ImageLoc).getImage();
 
 		
 	}
 	public void update(long timePassed){
+		
+		checkPlatforms();
 		
 		xVel+=xAcc*timePassed/1000;		
 		xPos+=xVel*timePassed/1000;
@@ -42,6 +45,7 @@ public class Babe {
 		}
 		babePt.x=(int) xPos;
 		babePt.y=(int) yPos;
+		
 		
 		if(babePt.x>=width/2-babeImg.getWidth(null)/2-5&&babePt.x<=width/2-babeImg.getWidth(null)/2+5){
 			setPlayerCentered(true);
@@ -64,11 +68,42 @@ public class Babe {
 	public double getX(){
 		return xPos;
 	}
+	public double getY(){
+		return yPos;
+	}
 	public void setPlayerCentered(boolean asdf){
 		PlayerCentered=asdf;
 	}
 	public boolean getPlayerCentered(){
 		return PlayerCentered;
+	}
+	public void setPlatformCollision(boolean hithead,boolean landed, boolean hitside){
+		HeadHitBottom=hithead;
+		LandedOnPlatform = landed;
+		HitSideofPlatform = hitside;
+	}
+
+	public void checkPlatforms(){
+		//head hits bottom
+		if(HeadHitBottom==true){
+			yVel=0;
+		}else if(LandedOnPlatform==true){
+			yVel=0;
+			jumping=false;
+		}else if(HitSideofPlatform==true){
+			xVel=0;
+		}else{
+			if(LandedOnPlatform==false&&height-yPos>=100){
+				jumping=true;
+			}
+		}
+	
+	}
+	public int getWidth(){
+		return babeImg.getWidth(null);
+	}
+	public int getHeight(){
+		return babeImg.getHeight(null);
 	}
 	public void draw(Graphics2D gelf){
 		if(babePt.x<0){

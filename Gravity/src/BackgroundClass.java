@@ -15,17 +15,17 @@ public class BackgroundClass {
 	private int ScreenWidth;
 	private boolean BgEnd=false;
 	
-	public BackgroundClass(double x, int sW){
+	public BackgroundClass(double x, int sW, String ImageLoc){
 		xPos=x;
 		ScreenWidth=sW;
 		bgPt=new Point();
-		bgImg= new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\bgplaceholder.jpg").getImage();
+		bgImg= new ImageIcon(ImageLoc).getImage();
 		
 	}
 	public void update(long timePassed){
 		int tempX=(int)xPos;
 		xPos+=xVel*timePassed/1000;
-		System.out.println(xPos + " " + bgPt.x + " " + DistanceTraveled);
+	//	System.out.println(xPos + " " + bgPt.x + " " + DistanceTraveled);
 		bgPt.x=(int)xPos;
 		DistanceTraveled+=-1*(xPos-tempX);
 		if(DistanceTraveled==1920&&DistanceTraveled>0){
