@@ -7,14 +7,13 @@ import javax.swing.ImageIcon;
 
 
 public class Babe {
-	private double xAcc=0,yAcc=-98;
+	private double xAcc=0,yAcc=0;
 	private double xVel=0,yVel=0;
 	private double xPos,yPos;
 	private Image babeImg;
 	private Point babePt;
 	private int height,width;
-	private boolean jumping;
-	private boolean PlayerCentered=false;
+	private boolean slowmedown=false;
 	private boolean HeadHitBottom,LandedOnPlatform,HitSideofPlatform;
 	
 	public Babe(double x,double y,int h, int w, String ImageLoc){
@@ -28,55 +27,85 @@ public class Babe {
 		
 	}
 	public void update(long timePassed){
-		
-		checkPlatforms();
-		
-		xVel+=xAcc*timePassed/1000;		
-		xPos+=xVel*timePassed/1000;
-		if(jumping){
-			yVel+=yAcc*timePassed/1000;
+			
+		if(slowmedown){
+			if(xVel>0){
+				xAcc=-100;
+			}else if(xVel<0){
+				xAcc=100;
+			}else if(xVel==0){
+				xAcc=0;
+			}
+			
+			if(yVel>0){
+				yAcc=-100;
+			}else if(yVel<0){
+				yAcc=100;
+			}else if(yVel==0){
+				yAcc=0;
+			}
 		}
-		if(height-yPos>=100&&jumping){
-			yPos-=yVel*timePassed/1000;
-		}else{
-			yPos=height-100;
-			yVel=0;
-			jumping=false;
+		if(xAcc!=0){
+			xVel+=xAcc*timePassed/1000;		
+			xPos+=xVel*timePassed/1000;
+		}
+		if(yAcc!=0){
+			yVel+=yAcc*timePassed/1000;
+			yPos+=yVel*timePassed/1000;
 		}
 		babePt.x=(int) xPos;
-		babePt.y=(int) yPos;
+		babePt.y=(int) yPos;	
 		
-		
-		if(babePt.x>=width/2-babeImg.getWidth(null)/2-5&&babePt.x<=width/2-babeImg.getWidth(null)/2+5){
-			setPlayerCentered(true);
+	
+	}
+	public void setDirection(int DirectionNumber){
+		if(DirectionNumber==1){
+			//UP
+			if(slowmedown){
+				xAcc=0;
+				xVel=0;
+			}
+			yAcc=-100;
+			slowmedown=false;
+		}else if(DirectionNumber==2){
+			//DOWN
+			if(slowmedown){
+				xAcc=0;
+				xVel=0;
+			}
+			yAcc=100;
+			slowmedown=false;
+		}else if(DirectionNumber==3){
+			//LEFT
+			if(slowmedown){
+				yAcc=0;
+				yVel=0;
+			}
+			xAcc=-100;
+			slowmedown=false;
+		}else if(DirectionNumber==4){
+			//RIGHT
+			if(slowmedown){
+				yAcc=0;
+				yVel=0;
+			}
+			xAcc=100;
+			slowmedown=false;
 		}else{
-			setPlayerCentered(false);
+			slowmedown=true;
 		}
+		System.out.println( "   Y Acc is "+yAcc+ "   X Acc is "+xAcc);
+
 		
-	
-	}
-	public void setXVelocity(double newV){  
-		xVel=newV;
 	}
 	
-	public void jump(double newyVel){
-		if(!jumping){
-			yVel=newyVel;
-		}
-		jumping=true;
-	}
 	public double getX(){
 		return xPos;
 	}
 	public double getY(){
 		return yPos;
 	}
-	public void setPlayerCentered(boolean asdf){
-		PlayerCentered=asdf;
-	}
-	public boolean getPlayerCentered(){
-		return PlayerCentered;
-	}
+	
 	public void setPlatformCollision(boolean hithead,boolean landed, boolean hitside){
 		HeadHitBottom=hithead;
 		LandedOnPlatform = landed;
@@ -89,12 +118,10 @@ public class Babe {
 			yVel=0;
 		}else if(LandedOnPlatform==true){
 			yVel=0;
-			jumping=false;
 		}else if(HitSideofPlatform==true){
 			xVel=0;
 		}else{
 			if(LandedOnPlatform==false&&height-yPos>=100){
-				jumping=true;
 			}
 		}
 	
@@ -109,8 +136,11 @@ public class Babe {
 		if(babePt.x<0){
 			babePt.x+=width;
 		}
-		
+		if(babePt.y<0){
+			babePt.y+=height;
+		}
 		babePt.x %= width;
+		babePt.y %=height;
 		int ix = babePt.x;
 		int iy = babePt.y;
 		gelf.drawImage(babeImg, ix, iy,null);

@@ -1,9 +1,10 @@
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import javax.swing.ImageIcon;
 
 
 public class BackgroundController extends Core implements KeyListener {
@@ -11,8 +12,7 @@ public class BackgroundController extends Core implements KeyListener {
 		new BackgroundController().run();
 	}
 
-	private BackgroundClass background;
-	private String backgroundImg = "C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\bgplaceholder.jpg";
+	private Image backgroundImg = new ImageIcon("C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\bgplaceholder.jpg").getImage();
 	
 	private Babe babe;
 	private String babeImg = "C:\\Users\\David\\Documents\\GitHub\\Gravity\\Graphics\\CharacterFiller.png";
@@ -27,8 +27,7 @@ public class BackgroundController extends Core implements KeyListener {
 		super.init();
 				
 		Window w = s.getFullScreenWindow();
-		background= new BackgroundClass(0,s.getWidth(),backgroundImg);
-		babe = new Babe(20,w.getHeight()-100,s.getHeight(),s.getWidth(),babeImg);
+		babe = new Babe(w.getWidth()/2,w.getHeight()/2,s.getHeight(),s.getWidth(),babeImg);
 		platformtest= new Platform(s.getWidth()/2-150,s.getHeight()-200,platformtestImg);
 		
 		w.setFocusTraversalKeysEnabled(false);
@@ -38,45 +37,35 @@ public class BackgroundController extends Core implements KeyListener {
 	
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
-			babeV=100;
+
 		if(keyCode == KeyEvent.VK_ESCAPE){
 			stop();
 		}
-		if(background.getX()>=0&&background.getX()<=background.getImage().getWidth(null)){
-			if(keyCode==KeyEvent.VK_LEFT){
-				babe.setXVelocity(-1*babeV);
-				background.setXVelocity(bgV);
-				DirectionInt=1;
+		if(keyCode==KeyEvent.VK_LEFT){
+			DirectionInt=3;	
+			e.consume();
 				
-				e.consume();
+		}else if(keyCode==KeyEvent.VK_RIGHT){
+			DirectionInt=4;
 				
-			}else if(keyCode==KeyEvent.VK_RIGHT){
-				babe.setXVelocity(babeV);
-				background.setXVelocity(-1*bgV);
-				DirectionInt=2;
+			e.consume();
+		}else if(keyCode==KeyEvent.VK_UP){
+			DirectionInt=1;			
 				
-				e.consume();
-			}else if(keyCode==KeyEvent.VK_UP){
-				//TODO: Set Y velocity for jumping
-				babe.jump(200);
-				
-				e.consume();
-			}else if(keyCode==KeyEvent.VK_DOWN){
-				
-				e.consume();
-			}else{
-				
-				e.consume();
-			}
+			e.consume();
+		}else if(keyCode==KeyEvent.VK_DOWN){
+			DirectionInt=2;
+			e.consume();
+		}else if(keyCode==KeyEvent.VK_SPACE){
+			DirectionInt=0;
+		}else{	
+			e.consume();
 		}
 	}
 
+
 	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode()==KeyEvent.VK_LEFT||e.getKeyCode()==KeyEvent.VK_RIGHT){
-			background.setXVelocity(0);
-			babe.setXVelocity(0);
-		}
-		
+		babe.setDirection(DirectionInt);
 		e.consume();
 	}
 
@@ -85,9 +74,7 @@ public class BackgroundController extends Core implements KeyListener {
 	}
 
 	public void update(long timePassed){
-		whoIsMoving();
 		checkPlatformCollisions();
-		background.update(timePassed);
 		babe.update(timePassed);
 		platformtest.update(timePassed);
 		
@@ -96,7 +83,7 @@ public class BackgroundController extends Core implements KeyListener {
 	public void checkPlatformCollisions(){
 		
 		 if(
-				 //TODO: Fix the Side Bug
+		 //TODO: Fix the Side Bug
 			(babe.getY()+babe.getHeight()>=platformtest.getbottomY()&&babe.getY()+babe.getHeight()<=platformtest.gettopY())||
 					//partially to the left
 			(babe.getY()>=platformtest.getbottomY()&&babe.getY()<=platformtest.gettopY())||
@@ -130,26 +117,9 @@ public class BackgroundController extends Core implements KeyListener {
 		 
 		 
 	}
-	public void whoIsMoving(){
-	/*	if(!background.getBgEnd()){
-			if((babe.getPlayerCentered()&&DirectionInt==2)){
-				babeV=0;
-				bgV=100;
-			}else if(babe.getPlayerCentered()&&DirectionInt==1&&background.getX()>0){
-				babeV=0;
-				bgV=100;
-			}else{
-				babeV=100;
-				bgV=0;
-			}
-		}else if(background.getBgEnd()){
-			babeV=100;
-			bgV=0;
-		}*/
-		
-	}
+	
 	public void draw(Graphics2D gelf) {
-		background.draw(gelf);
+		gelf.drawImage(backgroundImg, 0, 0, null);
 		babe.draw(gelf);
 		platformtest.draw(gelf);
 		
