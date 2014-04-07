@@ -41,7 +41,9 @@ public class Platform {
 	public int getrightX(){
 		return rightX;
 	}
-	
+	public Image getImage(){
+		return platformImg;
+	}
 	public void update(long timePassed){
 		
 	}

@@ -81,43 +81,24 @@ public class BackgroundController extends Core implements KeyListener {
 		
 	}
 	public void checkPlatformCollisions(){
-		
-		 if(
-		 //TODO: Fix the Side Bug
-			(babe.getY()+babe.getHeight()>=platformtest.getbottomY()&&babe.getY()+babe.getHeight()<=platformtest.gettopY())||
-					//partially to the left
-			(babe.getY()>=platformtest.getbottomY()&&babe.getY()<=platformtest.gettopY())||
-					//all the way on the platform
-			(babe.getY()>=platformtest.gettopY()&&babe.getY()+babe.getHeight()<=platformtest.getbottomY())
-			){
-			 System.out.println("Y is lined up!");
-			 if((int)babe.getX()+babe.getWidth()==platformtest.getleftX()||(int)babe.getX()==platformtest.getrightX()){
-			babe.setPlatformCollision(false, false, true);
-			System.out.println("You bumped the side!");
-
-			 }
-		}else if(
-				//Checks X first
-				//Partially to the right
-				(babe.getX()+babe.getWidth()>=platformtest.getrightX()&&babe.getX()+babe.getWidth()<=platformtest.getleftX())||
-				//partially to the left
-				(babe.getX()>=platformtest.getrightX()&&babe.getX()<=platformtest.getleftX())||
-				//all the way on the platform
-				(babe.getX()>=platformtest.getleftX()&&babe.getX()+babe.getWidth()<=platformtest.getrightX())
+		//Check if X is lined up
+		if(
+			(babe.getX()<=platformtest.getrightX()&&babe.getX()>=platformtest.getleftX())	
+		||	(babe.getX()+babe.getWidth()<=platformtest.getrightX()&&babe.getX()+babe.getWidth()>=platformtest.getleftX())
+		||	(babe.getX()<=platformtest.getleftX()&&babe.getX()+babe.getWidth()>=platformtest.getrightX())
 				){
-			if((int)babe.getY()==platformtest.getbottomY()){
-				//babe.setPlatformCollision(true, false, false);
-				System.out.println("You hit your head!");
-			}else if((int)babe.getY()+babe.getHeight()==platformtest.gettopY()){
-				babe.setPlatformCollision(false, true, false);
-				System.out.println("You landed!");
+			System.out.println("X is Lined up!");
+			if(
+				(babe.getY()<=platformtest.gettopY()&&babe.getY()>=platformtest.getbottomY())	
+			||	(babe.getY()+babe.getHeight()<=platformtest.gettopY()&&babe.getY()+babe.getHeight()>=platformtest.getbottomY())
+			||	(babe.getY()<=platformtest.getbottomY()&&babe.getY()+babe.getHeight()>=platformtest.gettopY())		
+					){
+				System.out.println("Y is Lined up!");
+				babe.setPlatformCollision(true);
 			}
-		}
-		 
-		 
-		 
+		
 	}
-	
+}
 	public void draw(Graphics2D gelf) {
 		gelf.drawImage(backgroundImg, 0, 0, null);
 		babe.draw(gelf);
