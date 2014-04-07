@@ -17,6 +17,7 @@ public class Babe {
 	private boolean slowmedown=false;
 	private boolean collided;
 	private int LivesLeft=5;
+	private int TimeScore;
 	private boolean GameOver=false;
 	
 	public Babe(double x,double y,int h, int w, String ImageLoc){
@@ -31,7 +32,9 @@ public class Babe {
 	}
 	public void reset(){
 		//TODO: Reset Animation Goes Here
-		
+		if(LivesLeft<=0){
+			LivesLeft=5;
+		}
 		xPos=startX;
 		yPos=startY;
 		xVel=0;
@@ -67,7 +70,7 @@ public class Babe {
 				yVel+=yAcc*timePassed/1000;
 				yPos+=yVel*timePassed/1000;
 			}	
-	
+			TimeScore+=timePassed;
 }
 	public void setDirection(int DirectionNumber){
 		if(DirectionNumber==1){
@@ -152,7 +155,8 @@ public class Babe {
 		return babeImg.getHeight(null);
 	}
 	public void draw(Graphics2D gelf){
-	
+		gelf.drawString(("Time: "+TimeScore/10),sWidth/2,20);
+		gelf.drawString(("Lives: "+ LivesLeft), 20, 20);
 		gelf.drawImage(babeImg,(int) xPos,(int) yPos,null);
 	}
 	
