@@ -25,6 +25,9 @@ public class Gravity implements ApplicationListener {
 
 	@Override
 	public void dispose() {
+		hero.dispose();
+		
+		batch.dispose();
 	
 	}
 	public void render() {		
