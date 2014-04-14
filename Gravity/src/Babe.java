@@ -70,6 +70,7 @@ public class Babe {
 				yVel+=yAcc*timePassed/1000;
 				yPos+=yVel*timePassed/1000;
 			}	
+			
 			TimeScore+=timePassed;
 }
 	public void setDirection(int DirectionNumber){
@@ -156,7 +157,7 @@ public class Babe {
 	}
 	public void draw(Graphics2D gelf){
 		gelf.drawString(("Time: "+TimeScore/10),sWidth/2,20);
-		gelf.drawString(("Lives: "+ LivesLeft), 20, 20);
+		gelf.drawString(("Lives: "+ LivesLeft), sWidth/2,40);
 		gelf.drawImage(babeImg,(int) xPos,(int) yPos,null);
 	}
 	
