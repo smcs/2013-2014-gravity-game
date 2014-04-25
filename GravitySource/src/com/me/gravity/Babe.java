@@ -1,18 +1,13 @@
+package com.me.gravity;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-
-import javax.swing.ImageIcon;
-
+import com.badlogic.gdx.graphics.Texture;
 
 public class Babe {
+	private Texture babeTex;
 	private double xAcc=0,yAcc=0;
 	private double xVel=0,yVel=0;
-	private double xPos,yPos;
+	private float xPos,yPos;
 	private double startX,startY;
-	private Image babeImg;
-	private Point babePt;
 	private int sHeight,sWidth;
 	private boolean slowmedown=false;
 	private boolean collided;
@@ -20,13 +15,12 @@ public class Babe {
 	private int TimeScore;
 	private boolean GameOver=false;
 	
-	public Babe(double x,double y,int h, int w, String ImageLoc){
+	public Babe(double x,double y,int h, int w, Texture hero){
 		startX=x;
 		startY=y;
 		sHeight=h;
 		sWidth=w;
-		babePt=new Point();
-		babeImg= new ImageIcon(ImageLoc).getImage();
+		babeTex=hero;
 		reset();
 		
 	}
@@ -35,15 +29,15 @@ public class Babe {
 		if(LivesLeft<=0){
 			LivesLeft=5;
 		}
-		xPos=startX;
-		yPos=startY;
+		xPos=(float) startX;
+		yPos=(float) startY;
 		xVel=0;
 		xAcc=0;
 		yVel=0;
 		yAcc=0;
 		collided=false;
 	}
-	public void update(long timePassed){
+	public void update(float timePassed){
 		checkfordeaths();
 			if(slowmedown){
 				if(xVel>0){
@@ -63,12 +57,12 @@ public class Babe {
 				}
 			}
 			if(xAcc!=0){
-				xVel+=xAcc*timePassed/1000;		
-				xPos+=xVel*timePassed/1000;
+				xVel+=xAcc*timePassed;		
+				xPos+=xVel*timePassed;
 			}
 			if(yAcc!=0){
-				yVel+=yAcc*timePassed/1000;
-				yPos+=yVel*timePassed/1000;
+				yVel+=yAcc*timePassed;
+				yPos+=yVel*timePassed;
 			}	
 			
 			TimeScore+=timePassed;
@@ -109,15 +103,13 @@ public class Babe {
 		}else{
 			slowmedown=true;
 		}
-		System.out.println( "   Y Acc is "+yAcc+ "   X Acc is "+xAcc);
-
 		
 	}
 	
-	public double getX(){
+	public float getX(){
 		return xPos;
 	}
-	public double getY(){
+	public float getY(){
 		return yPos;
 	}
 	public boolean getGameOver(){
@@ -130,7 +122,7 @@ public class Babe {
 
 	
 	public void checkfordeaths(){ 
-		if(yPos<=0||yPos>=sHeight-babeImg.getHeight(null)||xPos<=0||xPos>=sWidth-babeImg.getWidth(null)||collided){
+		if(yPos<=0||yPos>=sHeight-babeTex.getHeight()||xPos<=0||xPos>=sWidth-babeTex.getWidth()||collided){
 			//Hits wall
 			if(LivesLeft>0){
 				LivesLeft--;
@@ -146,22 +138,10 @@ public class Babe {
 		
 		
 	}
-	public Image getImage(){
-		return babeImg;
-	}
-	public int getWidth(){
-		return babeImg.getWidth(null);
-	}
-	public int getHeight(){
-		return babeImg.getHeight(null);
-	}
-	public void draw(Graphics2D gelf){
-		gelf.drawString(("Time: "+TimeScore/10),sWidth/2,20);
-		gelf.drawString(("Lives: "+ LivesLeft), sWidth/2,40);
-		gelf.drawImage(babeImg,(int) xPos,(int) yPos,null);
-	}
-	
 
+
+		
+	
 	
 }
 
