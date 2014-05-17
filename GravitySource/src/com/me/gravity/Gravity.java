@@ -11,30 +11,73 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.MathUtils;
 
 public class Gravity implements ApplicationListener, GestureListener {
 	private SpriteBatch batch;
-	private Texture hero;
+	private Texture hero,misTex;
 	private InputProcessor inputProcessor;
 	private Vector2 position;
 	private OrthographicCamera camera;
 	private Babe babe;
+	private Missile[] missile=new Missile[5];
+	private float timePassed=0;
+	private int missilecounter=0;
 	@Override
 	public void create() {		
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-	    camera.setToOrtho(false, 800, 480);
+	    camera.setToOrtho(false, 1920, 1080);
 		hero = new Texture(Gdx.files.internal("data\\CharacterFiller.png"));
 		babe= new Babe(50,50,Gdx.graphics.getHeight(),Gdx.graphics.getWidth(), hero);
+		misTex = new Texture(Gdx.files.internal("data\\missilefiller.png"));
         GestureDetector gd = new GestureDetector(this);
         Gdx.input.setInputProcessor(gd);
 
 	}
 
+	public void MissileMaker(){
+		if(babe.getXVel()>0 || babe.getYVel()>0){
+			timePassed+=Gdx.graphics.getDeltaTime();
+			float randInt;
+			randInt = MathUtils.random(3,6);
+			
+			if(timePassed>=randInt){
+				timePassed=0;
+				//startX startY screenW, screenH, Texture mT
+				if(MathUtils.randomBoolean()){
+					if(MathUtils.randomBoolean()){
+						//Y AT 0
+						missile[missilecounter] = new Missile(MathUtils.random(50,Gdx.graphics.getWidth()-50),0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), misTex);
+					}else{
+						//Y AT EDGE
+						missile[missilecounter] = new Missile(MathUtils.random(50,Gdx.graphics.getWidth()-50),Gdx.graphics.getHeight(),Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), misTex);
+	
+					}
+				}else{
+					if(MathUtils.randomBoolean()){
+						//X AT 0
+						missile[missilecounter] = new Missile(0,MathUtils.random(50,Gdx.graphics.getHeight()-50),Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), misTex);
+					}else{
+						//X AT EDGE
+						missile[missilecounter] = new Missile(Gdx.graphics.getWidth(),MathUtils.random(50,Gdx.graphics.getHeight()-50),Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), misTex);
+	
+					}
+				}
+				if(missilecounter<4){
+					missilecounter++;
+				}else{
+					missilecounter=0;
+				}
+			}
+		}	
+	}
 	@Override
 	public void dispose() {
 		hero.dispose();
-		
+		if(missile!=null){
+			misTex.dispose();
+		}
 		batch.dispose();
 	
 	}
@@ -59,11 +102,36 @@ public class Gravity implements ApplicationListener, GestureListener {
 			babe.setDirection(3);
 		}
 		babe.update(Gdx.graphics.getDeltaTime());
-		batch.begin();
+		for(int i=0; i<5;i++){
+			if(missile[i]!=null && missile[i].pastScreenEnd()){
+				missile[i]=null;
+				timePassed=0; 
+			}
+			if(missile[i]!=null){
+				missile[i].update(Gdx.graphics.getDeltaTime());
+				if(babe.getBabeBound().contains(missile[i].getMissileBound())){
+					babe.setPlatformCollision(true);
+					missile[i]=null;
+					timePassed=0;
+				}
+			}
+			
+		}
 		
-		batch.draw(hero, babe.getX(), babe.getY());
+		MissileMaker();
+		
+		batch.begin();
+		for(int i=0; i<5;i++){
+			if(missile[i]!=null){
+				batch.draw(misTex, missile[i].getX(), missile[i].getY());
+			}
+		}
+		
+		batch.draw(hero, babe.getBabeBound().getX(), babe.getBabeBound().getY());
 		batch.end();
 	}
+	
+	
 
 	@Override
 	public void resize(int width, int height) {

@@ -1,6 +1,7 @@
 package com.me.gravity;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Babe {
 	private Texture babeTex;
@@ -14,6 +15,7 @@ public class Babe {
 	private int LivesLeft=5;
 	private int TimeScore;
 	private boolean GameOver=false;
+	private Rectangle boundRect;
 	
 	public Babe(double x,double y,int h, int w, Texture hero){
 		startX=x;
@@ -22,7 +24,6 @@ public class Babe {
 		sWidth=w;
 		babeTex=hero;
 		reset();
-		
 	}
 	public void reset(){
 		//TODO: Reset Animation Goes Here
@@ -31,6 +32,7 @@ public class Babe {
 		}
 		xPos=(float) startX;
 		yPos=(float) startY;
+		boundRect = new Rectangle(xPos,yPos,babeTex.getWidth(),babeTex.getHeight());
 		xVel=0;
 		xAcc=0;
 		yVel=0;
@@ -64,7 +66,7 @@ public class Babe {
 				yVel+=yAcc*timePassed;
 				yPos+=yVel*timePassed;
 			}	
-			
+			boundRect.setPosition(xPos, yPos);
 			TimeScore+=timePassed;
 }
 	public void setDirection(int DirectionNumber){
@@ -106,11 +108,14 @@ public class Babe {
 		
 	}
 	
-	public float getX(){
-		return xPos;
+	public Rectangle getBabeBound(){
+		return boundRect;
 	}
-	public float getY(){
-		return yPos;
+	public double getXVel(){
+		return xVel;
+	}
+	public double getYVel(){
+		return yVel;
 	}
 	public boolean getGameOver(){
 		return GameOver;

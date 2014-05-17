@@ -7,8 +7,8 @@ public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Gravity";
-		cfg.width = 800;
-		cfg.height = 480;
+		cfg.width = 1920;
+		cfg.height = 1080;
 		
 		new LwjglApplication(new Gravity(), cfg);
 	}
