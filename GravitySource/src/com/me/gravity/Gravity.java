@@ -7,43 +7,57 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
 public class Gravity implements ApplicationListener, GestureListener {
 	private SpriteBatch batch;
 	private Texture hero,misTex;
+	private TextureRegion[] bgTex = new TextureRegion[39];
+	private Animation bgAni;
 	private InputProcessor inputProcessor;
 	private Vector2 position;
 	private OrthographicCamera camera;
 	private Babe babe;
 	private Missile[] missile=new Missile[5];
-	private float timePassed=0;
+	private float TimePassedForMissiles=0;
 	private int missilecounter=0;
+	private float aniCounter=0;
+	private float bgRot=0;
+	
+	
 	@Override
 	public void create() {		
+		
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 	    camera.setToOrtho(false, 1920, 1080);
+	    for(int i = 0; i<39; i++){
+	    	bgTex[i] = new TextureRegion(new Texture(Gdx.files.internal("data\\stargif1_"+i+".gif")));
+	    }
+	    bgAni = new Animation((float) 1,bgTex);
 		hero = new Texture(Gdx.files.internal("data\\CharacterFiller.png"));
 		babe= new Babe(50,50,Gdx.graphics.getHeight(),Gdx.graphics.getWidth(), hero);
 		misTex = new Texture(Gdx.files.internal("data\\missilefiller.png"));
-        GestureDetector gd = new GestureDetector(this);
+		
+		GestureDetector gd = new GestureDetector(this);
         Gdx.input.setInputProcessor(gd);
-
+        
 	}
 
 	public void MissileMaker(){
 		if(babe.getXVel()>0 || babe.getYVel()>0){
-			timePassed+=Gdx.graphics.getDeltaTime();
+			TimePassedForMissiles+=Gdx.graphics.getDeltaTime();
 			float randInt;
 			randInt = MathUtils.random(3,6);
 			
-			if(timePassed>=randInt){
-				timePassed=0;
+			if(TimePassedForMissiles>=randInt){
+				TimePassedForMissiles=0;
 				//startX startY screenW, screenH, Texture mT
 				if(MathUtils.randomBoolean()){
 					if(MathUtils.randomBoolean()){
@@ -78,6 +92,7 @@ public class Gravity implements ApplicationListener, GestureListener {
 		if(missile!=null){
 			misTex.dispose();
 		}
+		bgTex[bgAni.getKeyFrameIndex(aniCounter)].getTexture().dispose();
 		batch.dispose();
 	
 	}
@@ -91,28 +106,32 @@ public class Gravity implements ApplicationListener, GestureListener {
 	    
 		if(Gdx.input.isKeyPressed(Keys.W)){
 			babe.setDirection(2);
+			bgRot=90;
 		}
 		if(Gdx.input.isKeyPressed(Keys.S)){
 			babe.setDirection(1);
+			bgRot=270;
 		}
 		if(Gdx.input.isKeyPressed(Keys.D)){
 			babe.setDirection(4);
+			bgRot=0;
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)){
 			babe.setDirection(3);
+			bgRot=180;
 		}
 		babe.update(Gdx.graphics.getDeltaTime());
 		for(int i=0; i<5;i++){
 			if(missile[i]!=null && missile[i].pastScreenEnd()){
 				missile[i]=null;
-				timePassed=0; 
+				TimePassedForMissiles=0; 
 			}
 			if(missile[i]!=null){
 				missile[i].update(Gdx.graphics.getDeltaTime());
 				if(babe.getBabeBound().contains(missile[i].getMissileBound())){
 					babe.setPlatformCollision(true);
 					missile[i]=null;
-					timePassed=0;
+					TimePassedForMissiles=0;
 				}
 			}
 			
@@ -121,12 +140,23 @@ public class Gravity implements ApplicationListener, GestureListener {
 		MissileMaker();
 		
 		batch.begin();
+		if(bgRot==180||bgRot==0){
+			batch.draw(bgTex[bgAni.getKeyFrameIndex(aniCounter)], 0, 0, 1920/2, 1080/2, 1920, 1080, 1, 1, bgRot);
+		}else if(bgRot==90||bgRot==270){
+			batch.draw(bgTex[bgAni.getKeyFrameIndex(aniCounter)], (1920-1080)/2, -(1920-1080)/2, 1080/2, 1920/2, 1080, 1920, 1, 1, bgRot);
+		}
 		for(int i=0; i<5;i++){
 			if(missile[i]!=null){
-				batch.draw(misTex, missile[i].getX(), missile[i].getY());
+				batch.draw(misTex, missile[i].getX(), missile[i].getY(),misTex.getHeight(),misTex.getHeight());
 			}
 		}
+		if(aniCounter>=bgAni.getKeyFrames().length){
+			aniCounter=0;
+		}else{
+			aniCounter++;
+		}
 		
+		System.out.println(aniCounter + "\t" + Gdx.graphics.getDeltaTime());
 		batch.draw(hero, babe.getBabeBound().getX(), babe.getBabeBound().getY());
 		batch.end();
 	}
@@ -170,12 +200,16 @@ public class Gravity implements ApplicationListener, GestureListener {
 		System.out.println("Fling performed velocity: " + Float.toString(velocityX) + ", " + Float.toString(velocityY));
 		if(velocityY>1500){
 			babe.setDirection(1);
+			bgRot=270;
 		}else if(velocityY<=-1500){
 			babe.setDirection(2);
+			bgRot=90;
 		}else if(velocityX>=1500){
-			babe.setDirection(4);	
+			babe.setDirection(4);
+			bgRot=0;
 		}else if(velocityX<=-1500){
 			babe.setDirection(3);
+			bgRot=180;
 		}
 		return true;
 	}
