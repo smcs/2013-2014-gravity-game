@@ -156,7 +156,6 @@ public class Gravity implements ApplicationListener, GestureListener {
 			aniCounter++;
 		}
 		
-		System.out.println(aniCounter + "\t" + Gdx.graphics.getDeltaTime());
 		batch.draw(hero, babe.getBabeBound().getX(), babe.getBabeBound().getY());
 		batch.end();
 	}
