@@ -103,7 +103,10 @@ public class Babe {
 			xAcc=100;
 			slowmedown=false;
 		}else{
-			slowmedown=true;
+			xVel=0;
+			xAcc=0;
+			yVel=0;
+			yAcc=0;
 		}
 		
 	}
@@ -126,19 +129,20 @@ public class Babe {
 	}
 
 	
-	public void checkfordeaths(){ 
+	public boolean checkfordeaths(){ 
 		if(yPos<=0||yPos>=sHeight-babeTex.getHeight()||xPos<=0||xPos>=sWidth-babeTex.getWidth()||collided){
 			//Hits wall
 			if(LivesLeft>0){
 				LivesLeft--;
-				reset();
+				return true;
 			}else{
 				//TODO: Game Over Screen
-				reset();
 				GameOver=true;
+				return true;
 			}
 		}else{
 			//Otherwise...
+			return false;
 		}
 		
 		

@@ -19,7 +19,8 @@ public class Gravity implements ApplicationListener, GestureListener {
 	private SpriteBatch batch;
 	private Texture hero,misTex;
 	private TextureRegion[] bgTex = new TextureRegion[39];
-	private Animation bgAni;
+	private TextureRegion[] deathTex= new TextureRegion[2];
+	private Animation bgAni,deathAni;
 	private InputProcessor inputProcessor;
 	private Vector2 position;
 	private OrthographicCamera camera;
@@ -27,7 +28,8 @@ public class Gravity implements ApplicationListener, GestureListener {
 	private Missile[] missile=new Missile[5];
 	private float TimePassedForMissiles=0;
 	private int missilecounter=0;
-	private float aniCounter=0;
+	private float BGaniCounter=0;
+	private float deathAniCounter=0;
 	private float bgRot=0;
 	
 	
@@ -36,14 +38,18 @@ public class Gravity implements ApplicationListener, GestureListener {
 		
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-	    camera.setToOrtho(false, 1920, 1080);
+	    camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	    System.out.println(Gdx.graphics.getHeight()+"\t"+Gdx.graphics.getWidth());
+	    hero = new Texture(Gdx.files.internal("data\\Aurellia.png"));
+		babe= new Babe(50,50,Gdx.graphics.getHeight(),Gdx.graphics.getWidth(), hero);
+		misTex = new Texture(Gdx.files.internal("data\\missilefiller.png"));
 	    for(int i = 0; i<39; i++){
 	    	bgTex[i] = new TextureRegion(new Texture(Gdx.files.internal("data\\stargif1_"+i+".gif")));
 	    }
 	    bgAni = new Animation((float) 1,bgTex);
-		hero = new Texture(Gdx.files.internal("data\\CharacterFiller.png"));
-		babe= new Babe(50,50,Gdx.graphics.getHeight(),Gdx.graphics.getWidth(), hero);
-		misTex = new Texture(Gdx.files.internal("data\\missilefiller.png"));
+	    deathTex[0]=new TextureRegion(hero);
+	    deathTex[1]=new TextureRegion(deathTex[0],0,0,0,0);
+		
 		
 		GestureDetector gd = new GestureDetector(this);
         Gdx.input.setInputProcessor(gd);
@@ -92,7 +98,7 @@ public class Gravity implements ApplicationListener, GestureListener {
 		if(missile!=null){
 			misTex.dispose();
 		}
-		bgTex[bgAni.getKeyFrameIndex(aniCounter)].getTexture().dispose();
+		bgTex[bgAni.getKeyFrameIndex(BGaniCounter)].getTexture().dispose();
 		batch.dispose();
 	
 	}
@@ -139,24 +145,44 @@ public class Gravity implements ApplicationListener, GestureListener {
 		
 		MissileMaker();
 		
+		//STARTS ANIMATING
 		batch.begin();
 		if(bgRot==180||bgRot==0){
-			batch.draw(bgTex[bgAni.getKeyFrameIndex(aniCounter)], 0, 0, 1920/2, 1080/2, 1920, 1080, 1, 1, bgRot);
+			batch.draw(bgTex[bgAni.getKeyFrameIndex(BGaniCounter)], 0, 0, 1920/2, 1080/2, 1920, 1080, 1, 1, bgRot);
 		}else if(bgRot==90||bgRot==270){
-			batch.draw(bgTex[bgAni.getKeyFrameIndex(aniCounter)], (1920-1080)/2, -(1920-1080)/2, 1080/2, 1920/2, 1080, 1920, 1, 1, bgRot);
+			batch.draw(bgTex[bgAni.getKeyFrameIndex(BGaniCounter)], (1920-1080)/2, -(1920-1080)/2, 1080/2, 1920/2, 1080, 1920, 1, 1, bgRot);
 		}
 		for(int i=0; i<5;i++){
 			if(missile[i]!=null){
 				batch.draw(misTex, missile[i].getX(), missile[i].getY(),misTex.getHeight(),misTex.getHeight());
 			}
 		}
-		if(aniCounter>=bgAni.getKeyFrames().length){
-			aniCounter=0;
-		}else{
-			aniCounter++;
+		
+		if(!babe.checkfordeaths()){
+			batch.draw(hero, babe.getBabeBound().getX(), babe.getBabeBound().getY());
+		}else if(babe.checkfordeaths()){
+			if(deathAniCounter<=30){
+				babe.setDirection(5);
+				if(deathAniCounter<=5||(deathAniCounter>=10&&deathAniCounter<=15)||(deathAniCounter>=20&&deathAniCounter<=25)){
+					batch.draw(hero, babe.getBabeBound().getX(), babe.getBabeBound().getY());
+					deathAniCounter++;
+				}else{
+					deathAniCounter++;
+				}
+			}else{
+				deathAniCounter=0;
+				babe.reset();
+			}
 		}
 		
-		batch.draw(hero, babe.getBabeBound().getX(), babe.getBabeBound().getY());
+		if(BGaniCounter>=bgAni.getKeyFrames().length){
+			BGaniCounter=0;
+		}else{
+			BGaniCounter++;
+		}
+		
+
+		
 		batch.end();
 	}
 	
@@ -215,7 +241,7 @@ public class Gravity implements ApplicationListener, GestureListener {
 
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		// TODO Auto-generated method stub
+		// TODO Start meowing
 		return false;
 	}
 
