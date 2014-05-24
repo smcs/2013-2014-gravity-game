@@ -40,7 +40,7 @@ public class Gravity implements ApplicationListener, GestureListener {
 		camera = new OrthographicCamera();
 	    camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	    System.out.println(Gdx.graphics.getHeight()+"\t"+Gdx.graphics.getWidth());
-	    hero = new Texture(Gdx.files.internal("data\\Aurellia.png"));
+	    hero = new Texture(Gdx.files.internal("data\\Aurellia2.png"));
 		babe= new Babe(50,50,Gdx.graphics.getHeight(),Gdx.graphics.getWidth(), hero);
 		misTex = new Texture(Gdx.files.internal("data\\missilefiller.png"));
 	    for(int i = 0; i<39; i++){
